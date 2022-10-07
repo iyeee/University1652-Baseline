@@ -4,9 +4,7 @@ from torch.nn import init
 from torchvision import models
 from torch.autograd import Variable
 from torch.nn import functional as F
-import sys
-sys.path.append('..')
-from attention.CBAM import CBAMBlock,SpatialAttention
+
 ######################################################################
 class USAM(nn.Module):
     def __init__(self, kernel_size=3, padding=1, polish=True):
@@ -206,26 +204,16 @@ class ft_net(nn.Module):
             self.model = init_model.model
             self.pool = init_model.pool
             #self.classifier.add_block = init_model.classifier.add_block
-        # self.usam_1 = USAM()
-        # self.usam_2 = USAM()
-        self.sa1 = SpatialAttention()
-        self.sa2 = SpatialAttention()
-        # self.sa2 = SpatialAttention()
-        # self.CBAM=CBAMBlock(channel=64)
-        # self.ca1 = attention.CBAM.ChannelAttention(self.model.inplanes)
-        
+        self.usam_1 = USAM()
+        self.usam_2 = USAM()
     def forward(self, x):
         x = self.model.conv1(x)
         x = self.model.bn1(x)
         x = self.model.relu(x)
-        # x = self.usam_1(x)
-        # x = self.ca(x) * x
-        # x = self.sa(x) * x
-        # x = x+self.sa(x) * x
-        x= x+self.sa1(x)
+        x = self.usam_1(x)
         x = self.model.maxpool(x)
         x = self.model.layer1(x)
-        x= x+self.sa2(x)
+        x = self.usam_2(x)
         x = self.model.layer2(x)
         x = self.model.layer3(x)
         x = self.model.layer4(x)
@@ -348,7 +336,7 @@ python model.py
 if __name__ == '__main__':
 # Here I left a simple forward function.
 # Test the model, before you train it. 
-    net = two_view_net(751, droprate=0.5, VGG16=False)
+    net = two_view_net(751, droprate=0.5, VGG16=True)
     #net.classifier = nn.Sequential()
     print(net)
     input = Variable(torch.FloatTensor(8, 3, 256, 256))

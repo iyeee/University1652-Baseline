@@ -1,6 +1,6 @@
 # Baseline
 python train.py \
---name='three_view_long_share_d0.75_256_s1_google_ResSpatialAttention12F' \
+--name='three_view_long_share_d0.75_256_s1_google_ResSpatialAttention12T' \
 --data_dir='/data/modanqi/projects/University1652-Baseline/data/train' \
 --extra \
 --views=3 \

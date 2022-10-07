@@ -508,7 +508,6 @@ if not opt.resume:
     if not os.path.isdir(dir_name):
         os.mkdir(dir_name)
     # record every run
-    copyfile('./run.sh', dir_name+'/run.sh')
     copyfile('train.py', dir_name + '/train.py')
     copyfile('./model.py', dir_name + '/model.py')
     # save opts

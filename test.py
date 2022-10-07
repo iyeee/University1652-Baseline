@@ -50,7 +50,7 @@ opt = parser.parse_args()
 # load the training config
 config_path = os.path.join('./model',opt.name,'opts.yaml')
 with open(config_path, 'r') as stream:
-        config = yaml.load(stream)
+        config = yaml.load(stream,Loader=yaml.FullLoader)
 opt.fp16 = config['fp16'] 
 opt.use_dense = config['use_dense']
 opt.use_NAS = config['use_NAS']
@@ -215,14 +215,14 @@ if use_gpu:
 since = time.time()
 
 #gallery_name = 'gallery_street' 
-query_name = 'query_satellite' 
+# query_name = 'query_satellite' 
 
-#gallery_name = 'gallery_satellite'
+gallery_name = 'gallery_satellite'
 #query_name = 'query_street'
 
 #gallery_name = 'gallery_street'
-#query_name = 'query_drone'
-gallery_name = 'gallery_drone'
+query_name = 'query_drone'
+# gallery_name = 'gallery_drone'
 
 which_gallery = which_view(gallery_name)
 which_query = which_view(query_name)

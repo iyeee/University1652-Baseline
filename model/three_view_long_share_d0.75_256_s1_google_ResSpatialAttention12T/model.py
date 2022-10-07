@@ -222,10 +222,10 @@ class ft_net(nn.Module):
         # x = self.ca(x) * x
         # x = self.sa(x) * x
         # x = x+self.sa(x) * x
-        x= x+self.sa1(x)
+        x= x+self.sa1(x)*x
         x = self.model.maxpool(x)
         x = self.model.layer1(x)
-        x= x+self.sa2(x)
+        x= x+self.sa2(x)*x
         x = self.model.layer2(x)
         x = self.model.layer3(x)
         x = self.model.layer4(x)

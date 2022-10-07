@@ -508,7 +508,6 @@ if not opt.resume:
     if not os.path.isdir(dir_name):
         os.mkdir(dir_name)
     # record every run
-    copyfile('./run.sh', dir_name+'/run.sh')
     copyfile('train.py', dir_name + '/train.py')
     copyfile('./model.py', dir_name + '/model.py')
     # save opts
@@ -526,7 +525,7 @@ if opt.moving_avg < 1.0:
     num_epochs = 140
 else:
     model_test = None
-    num_epochs = 160
+    num_epochs = 120
 
 model = train_model(model, model_test, criterion, optimizer_ft, exp_lr_scheduler,
                     num_epochs=num_epochs)

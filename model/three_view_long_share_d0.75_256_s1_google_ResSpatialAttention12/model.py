@@ -210,7 +210,6 @@ class ft_net(nn.Module):
         # self.usam_2 = USAM()
         self.sa1 = SpatialAttention()
         self.sa2 = SpatialAttention()
-        # self.sa2 = SpatialAttention()
         # self.CBAM=CBAMBlock(channel=64)
         # self.ca1 = attention.CBAM.ChannelAttention(self.model.inplanes)
         
@@ -226,6 +225,7 @@ class ft_net(nn.Module):
         x = self.model.maxpool(x)
         x = self.model.layer1(x)
         x= x+self.sa2(x)
+        # x = self.usam_2(x)
         x = self.model.layer2(x)
         x = self.model.layer3(x)
         x = self.model.layer4(x)

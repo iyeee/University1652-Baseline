@@ -1,0 +1,14 @@
+299epo
+torch.Size([37855, 512])
+torch.Size([951, 512])
+10
+Recall@1:36.95 Recall@5:59.42 Recall@10:68.49 Recall@top1:69.70 AP:42.23
+torch.Size([701, 512])
+torch.Size([51355, 512])
+514
+Recall@1:52.78 Recall@5:61.34 Recall@10:65.19 Recall@top1:92.87 AP:38.38
+
+159epotorch.Size([701, 512])
+torch.Size([51355, 512])
+514
+Recall@1:50.36 Recall@5:60.20 Recall@10:65.19 Recall@top1:90.58 AP:36.89
