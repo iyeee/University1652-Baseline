@@ -4,7 +4,9 @@ from torch.nn import init
 from torchvision import models
 from torch.autograd import Variable
 from torch.nn import functional as F
-from attentions.CBAM import CBAMBlock,SpatialAttention,ChannelAttention
+import sys
+sys.path.append('..')
+from attentions.CBAM import CBAMBlock,SpatialAttention
 from models.resnet_CBAM import ResidualNet
 from models.resnext import ResNeXt50
 ######################################################################
@@ -173,32 +175,23 @@ class ft_net(nn.Module):
             #self.classifier.add_block = init_model.classifier.add_block
         # self.usam_1 = USAM()
         # self.usam_2 = USAM()
-        # self.sa1 = SpatialAttention()
+        self.sa1 = SpatialAttention()
         # self.sa2 = SpatialAttention()
-        # self.CBAM=CBAMBlock(channel=64)
-        # self.CBAM1=CBAMBlock(channel=64)
-        # self.CBAM2=CBAMBlock(channel=2048)
-        # self.se=SKAttention(channel=64)  
-        self.ca=ChannelAttention(channel=64)
-        
+        # self.CBAM=CBAMBlock(channel=64))
+        # self.se=SKAttention(channel=64)
         
     def forward(self, x):
         x = self.model.conv1(x)
         x = self.model.bn1(x)
         x = self.model.relu(x)
         # x = self.ca(x) * x
-        # x = x+self.sa1(x) * x
+        x = x+self.sa1(x) * x
         # x = x+self.sa(x) * x
-        # x=self.CBAM(x)
-        # x=self.CBAM1(x)
-        x=x+self.ca(x)*x
         x = self.model.maxpool(x)
         x = self.model.layer1(x)
-     
         x = self.model.layer2(x)
         x = self.model.layer3(x)
         x = self.model.layer4(x)
-        # x=self.CBAM2(x)
         if self.pool == 'avg+max':
             x1 = self.model.avgpool2(x)
             x2 = self.model.maxpool2(x)

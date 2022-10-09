@@ -1,6 +1,6 @@
 # Baseline
 python train.py \
---name='three_view_long_share_d0.75_256_s1_google_ChannelAttention1T' \
+--name='three_view_long_share_d0.75_256_s1_google_ResSpatialAttention15' \
 --data_dir='/data/modanqi/projects/University1652-Baseline/data/train' \
 --extra \
 --views=3 \
@@ -10,4 +10,4 @@ python train.py \
 --h=256 \
 --w=256 \
 --gpu_ids='1' \
---batchsize=16
+--batchsize=32

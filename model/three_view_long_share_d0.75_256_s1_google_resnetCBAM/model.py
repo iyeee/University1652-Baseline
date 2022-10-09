@@ -4,10 +4,48 @@ from torch.nn import init
 from torchvision import models
 from torch.autograd import Variable
 from torch.nn import functional as F
-from attentions.CBAM import CBAMBlock,SpatialAttention,ChannelAttention
+import sys
+sys.path.append('..')
+from attention.CBAM import CBAMBlock,SpatialAttention
+from attention.SKAttention import SKAttention
 from models.resnet_CBAM import ResidualNet
-from models.resnext import ResNeXt50
 ######################################################################
+class USAM(nn.Module):
+    def __init__(self, kernel_size=3, padding=1, polish=True):
+        super(USAM, self).__init__()
+
+        kernel = torch.ones((kernel_size, kernel_size))
+        kernel = kernel.unsqueeze(0).unsqueeze(0)
+        self.weight = nn.Parameter(data=kernel, requires_grad=False)
+        
+
+        kernel2 = torch.ones((1, 1)) * (kernel_size * kernel_size)
+        kernel2 = kernel2.unsqueeze(0).unsqueeze(0)
+        self.weight2 = nn.Parameter(data=kernel2, requires_grad=False)
+
+        self.polish = polish
+        self.pad = padding
+        self.relu = nn.ReLU()
+        self.bn = nn.BatchNorm2d(1)
+
+    def __call__(self, x):
+        fmap = x.sum(1, keepdim=True)      
+        x1 = F.conv2d(fmap, self.weight, padding=self.pad)
+        x2 = F.conv2d(fmap, self.weight2, padding=0) 
+        
+        att = x2 - x1
+        att = self.bn(att)
+        att = self.relu(att)
+
+        if self.polish:
+            att[:, :, :, 0] = 0
+            att[:, :, :, -1] = 0
+            att[:, :, 0, :] = 0
+            att[:, :, -1, :] = 0
+
+        output = x + 2*att * x
+
+        return output
 class GeM(nn.Module):
     # GeM zhedong zheng
     def __init__(self, dim = 2048, p=3, eps=1e-6):
@@ -145,8 +183,8 @@ class ft_net(nn.Module):
 
     def __init__(self, class_num, droprate=0.5, stride=2, init_model=None, pool='avg'):
         super(ft_net, self).__init__()
-        model_ft = models.resnet50(pretrained=True)
-        # model_ft= ResidualNet(network_type='ImageNet', depth=50, num_classes=class_num, att_type='CBAM')
+        # model_ft = models.resnet50(pretrained=True)
+        model_ft= ResidualNet(network_type='ImageNet', depth=50, num_classes=class_num, att_type='CBAM')
         # avg pooling to global pooling
         if stride == 1:
             model_ft.layer4[0].downsample[0].stride = (1,1)
@@ -175,30 +213,26 @@ class ft_net(nn.Module):
         # self.usam_2 = USAM()
         # self.sa1 = SpatialAttention()
         # self.sa2 = SpatialAttention()
-        # self.CBAM=CBAMBlock(channel=64)
-        # self.CBAM1=CBAMBlock(channel=64)
-        # self.CBAM2=CBAMBlock(channel=2048)
-        # self.se=SKAttention(channel=64)  
-        self.ca=ChannelAttention(channel=64)
-        
+        # self.CBAM=CBAMBlock(channel=64))
+        # self.se=SKAttention(channel=64)
         
     def forward(self, x):
         x = self.model.conv1(x)
         x = self.model.bn1(x)
         x = self.model.relu(x)
+        # x = self.usam_1(x)
         # x = self.ca(x) * x
         # x = x+self.sa1(x) * x
         # x = x+self.sa(x) * x
-        # x=self.CBAM(x)
-        # x=self.CBAM1(x)
-        x=x+self.ca(x)*x
+        # x= x+self.sa1(x)
+        # x=self.se(x)
         x = self.model.maxpool(x)
         x = self.model.layer1(x)
-     
+        # x= x+self.sa2(x)
         x = self.model.layer2(x)
         x = self.model.layer3(x)
         x = self.model.layer4(x)
-        # x=self.CBAM2(x)
+        # x = x+self.sa2(x) * x
         if self.pool == 'avg+max':
             x1 = self.model.avgpool2(x)
             x2 = self.model.maxpool2(x)

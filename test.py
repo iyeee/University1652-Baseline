@@ -21,10 +21,10 @@ from model import ft_net, two_view_net, three_view_net
 from utils import load_network
 
 #fp16
-try:
-    from apex.fp16_utils import *
-except ImportError: # will be 3.x series
-    print('This is not an error. If you want to use low precision, i.e., fp16, please install the apex with cuda support (https://github.com/NVIDIA/apex) and update pytorch to 1.0')
+# try:
+    # from apex.fp16_utils import *
+# except ImportError: # will be 3.x series
+    # print('This is not an error. If you want to use low precision, i.e., fp16, please install the apex with cuda support (https://github.com/NVIDIA/apex) and update pytorch to 1.0')
 ######################################################################
 # Options
 # --------
@@ -215,14 +215,17 @@ if use_gpu:
 since = time.time()
 
 #gallery_name = 'gallery_street' 
-# query_name = 'query_satellite' 
 
-gallery_name = 'gallery_satellite'
+
 #query_name = 'query_street'
 
-#gallery_name = 'gallery_street'
-query_name = 'query_drone'
+# satellite -> drone   1->3
+# query_name = 'query_satellite' 
 # gallery_name = 'gallery_drone'
+
+# drone -> satellite    3->1
+gallery_name = 'gallery_satellite'
+query_name = 'query_drone'
 
 which_gallery = which_view(gallery_name)
 which_query = which_view(query_name)
