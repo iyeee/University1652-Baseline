@@ -5,8 +5,10 @@ from torchvision import models
 from torch.autograd import Variable
 from torch.nn import functional as F
 from attentions.CBAM import CBAMBlock,SpatialAttention,ChannelAttention
+from attentions.BAM import BAMBlock
 from models.resnet_CBAM import ResidualNet
 from models.resnext import ResNeXt50
+from models.eca_resnet import eca_resnet50
 ######################################################################
 class GeM(nn.Module):
     # GeM zhedong zheng
@@ -145,7 +147,8 @@ class ft_net(nn.Module):
 
     def __init__(self, class_num, droprate=0.5, stride=2, init_model=None, pool='avg'):
         super(ft_net, self).__init__()
-        model_ft = models.resnet50(pretrained=True)
+        # model_ft = models.resnet50(pretrained=True)
+        model_ft=eca_resnet50(k_size=[3, 3, 3, 3], pretrained=True)
         # model_ft= ResidualNet(network_type='ImageNet', depth=50, num_classes=class_num, att_type='CBAM')
         # avg pooling to global pooling
         if stride == 1:
@@ -179,7 +182,7 @@ class ft_net(nn.Module):
         # self.CBAM1=CBAMBlock(channel=64)
         # self.CBAM2=CBAMBlock(channel=2048)
         # self.se=SKAttention(channel=64)  
-        self.ca=ChannelAttention(channel=64)
+        # self.bam=BAMBlock(channel=64,reduction=16,dia_val=1)
         
         
     def forward(self, x):
@@ -191,7 +194,7 @@ class ft_net(nn.Module):
         # x = x+self.sa(x) * x
         # x=self.CBAM(x)
         # x=self.CBAM1(x)
-        x=x+self.ca(x)*x
+        # x=self.bam(x)
         x = self.model.maxpool(x)
         x = self.model.layer1(x)
      
