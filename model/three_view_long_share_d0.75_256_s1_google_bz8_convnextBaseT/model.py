@@ -10,7 +10,6 @@ from models.resnet_CBAM import ResidualNet
 from models.resnext import ResNeXt50
 from models.eca_resnet import eca_resnet50
 from models.convnext import convnext_base, convnext_large, convnext_small, convnext_tiny, convnext_xlarge
-from thop import profile
 ######################################################################
 class GeM(nn.Module):
     # GeM zhedong zheng
@@ -147,7 +146,7 @@ class ft_net_convnext(nn.Module):
 
     def __init__(self, class_num, droprate=0.5, stride=2, init_model=None, pool='avg'):
         super(ft_net_convnext, self).__init__()
-        model_ft = convnext_tiny(pretrained=True,in_22k=True)
+        model_ft = convnext_base(pretrained=True)
         # num_ftrs = model_ft.head.in_features
         # model_ft.head = nn.Linear(num_ftrs, class_num)
         self.model=model_ft
@@ -296,7 +295,7 @@ class three_view_net(nn.Module):
 
         self.circle = circle
 
-        self.classifier = ClassBlock(768, class_num, droprate, return_f = circle)
+        self.classifier = ClassBlock(1024, class_num, droprate, return_f = circle)
         if pool =='avg+max':
 
             self.classifier = ClassBlock(4096, class_num, droprate, return_f = circle)
@@ -349,7 +348,5 @@ if __name__ == '__main__':
     # print(net)
     input2 = Variable(torch.FloatTensor(8, 3, 256, 256))
     output2,output2,output2 = net(input2,input2,input2)
-    flops,params=profile(net,(input2,))
-    print('flops: ', flops, 'params: ', params)
     # print('net output size:')
     print(output2.shape)

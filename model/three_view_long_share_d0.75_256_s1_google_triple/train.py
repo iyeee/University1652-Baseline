@@ -30,7 +30,7 @@ from utils import update_average, get_model_list, load_network, save_network, ma
 from pytorch_metric_learning import losses, miners  # pip install pytorch-metric-learning
 from circle_loss import CircleLoss, convert_label_to_similarity
 from torchvision.transforms import InterpolationMode
-from torchtoolbox.transform import Cutout
+
 version = torch.__version__
 # fp16
 try:
@@ -112,7 +112,6 @@ transform_train_list = [
     transforms.Pad(opt.pad, padding_mode='edge'),
     transforms.RandomCrop((opt.h, opt.w)),
     transforms.RandomHorizontalFlip(),
-    # Cutout(),
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ]
@@ -123,7 +122,6 @@ transform_satellite_list = [
     transforms.RandomAffine(90),
     transforms.RandomCrop((opt.h, opt.w)),
     transforms.RandomHorizontalFlip(),
-    # Cutout(),
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ]

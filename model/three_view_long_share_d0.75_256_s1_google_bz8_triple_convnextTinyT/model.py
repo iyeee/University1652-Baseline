@@ -147,7 +147,7 @@ class ft_net_convnext(nn.Module):
 
     def __init__(self, class_num, droprate=0.5, stride=2, init_model=None, pool='avg'):
         super(ft_net_convnext, self).__init__()
-        model_ft = convnext_tiny(pretrained=True,in_22k=True)
+        model_ft = convnext_tiny(pretrained=True)
         # num_ftrs = model_ft.head.in_features
         # model_ft.head = nn.Linear(num_ftrs, class_num)
         self.model=model_ft

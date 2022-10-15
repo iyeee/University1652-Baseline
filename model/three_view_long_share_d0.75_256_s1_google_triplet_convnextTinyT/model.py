@@ -9,8 +9,7 @@ from attentions.BAM import BAMBlock
 from models.resnet_CBAM import ResidualNet
 from models.resnext import ResNeXt50
 from models.eca_resnet import eca_resnet50
-from models.convnext import convnext_base, convnext_large, convnext_small, convnext_tiny, convnext_xlarge
-from thop import profile
+from models.convnext import convnext_tiny
 ######################################################################
 class GeM(nn.Module):
     # GeM zhedong zheng
@@ -147,19 +146,17 @@ class ft_net_convnext(nn.Module):
 
     def __init__(self, class_num, droprate=0.5, stride=2, init_model=None, pool='avg'):
         super(ft_net_convnext, self).__init__()
-        model_ft = convnext_tiny(pretrained=True,in_22k=True)
+        model_ft = convnext_tiny(pretrained=True)
         # num_ftrs = model_ft.head.in_features
         # model_ft.head = nn.Linear(num_ftrs, class_num)
         self.model=model_ft
         
     def forward(self, x):
-        # print(x.shape)
         x=self.model.forward_features(x)
         # print(x.shape)
         # x = x.view(x.size(0), x.size(1))
         # print(x.shape)
         #x = self.classifier(x)
-        # print(x.shape)
         return x
 
 # Define the ResNet50-based Model
@@ -217,6 +214,7 @@ class ft_net(nn.Module):
         # x=self.bam(x)
         x = self.model.maxpool(x)
         x = self.model.layer1(x)
+     
         x = self.model.layer2(x)
         x = self.model.layer3(x)
         x = self.model.layer4(x)
@@ -340,16 +338,10 @@ python model.py
 if __name__ == '__main__':
 # Here I left a simple forward function.
 # Test the model, before you train it. 
-    # ft_net=ft_net(751, droprate=0.5)
-    # input1 = Variable(torch.FloatTensor(8, 3, 256, 256))
-    # output1=ft_net(input1)
-    # print(ft_net)
     net = three_view_net(751, droprate=0.5, VGG16=False)
     #net.classifier = nn.Sequential()
-    # print(net)
-    input2 = Variable(torch.FloatTensor(8, 3, 256, 256))
-    output2,output2,output2 = net(input2,input2,input2)
-    flops,params=profile(net,(input2,))
-    print('flops: ', flops, 'params: ', params)
-    # print('net output size:')
-    print(output2.shape)
+    print(net)
+    input = Variable(torch.FloatTensor(8, 3, 256, 256))
+    output,output,output = net(input,input,input)
+    print('net output size:')
+    print(output.shape)

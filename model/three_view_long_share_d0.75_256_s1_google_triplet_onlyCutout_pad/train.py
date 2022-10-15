@@ -110,9 +110,9 @@ transform_train_list = [
     # transforms.RandomResizedCrop(size=(opt.h, opt.w), scale=(0.75,1.0), ratio=(0.75,1.3333), interpolation=3), #Image.BICUBIC)
     transforms.Resize((opt.h, opt.w), interpolation=InterpolationMode.BICUBIC),
     transforms.Pad(opt.pad, padding_mode='edge'),
-    transforms.RandomCrop((opt.h, opt.w)),
-    transforms.RandomHorizontalFlip(),
-    # Cutout(),
+    # transforms.RandomCrop((opt.h, opt.w)),
+    # transforms.RandomHorizontalFlip(),
+    Cutout(),
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ]
@@ -120,10 +120,10 @@ transform_train_list = [
 transform_satellite_list = [
     transforms.Resize((opt.h, opt.w), interpolation=InterpolationMode.BICUBIC),
     transforms.Pad(opt.pad, padding_mode='edge'),
-    transforms.RandomAffine(90),
-    transforms.RandomCrop((opt.h, opt.w)),
-    transforms.RandomHorizontalFlip(),
-    # Cutout(),
+    # transforms.RandomAffine(90),
+    # transforms.RandomCrop((opt.h, opt.w)),
+    # transforms.RandomHorizontalFlip(),
+    Cutout(),
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ]
