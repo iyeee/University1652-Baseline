@@ -147,7 +147,7 @@ class ft_net_convnext(nn.Module):
 
     def __init__(self, class_num, droprate=0.5, stride=2, init_model=None, pool='avg'):
         super(ft_net_convnext, self).__init__()
-        model_ft = convnext_tiny(pretrained=True)
+        model_ft = convnext_small(pretrained=True)
         # num_ftrs = model_ft.head.in_features
         # model_ft.head = nn.Linear(num_ftrs, class_num)
         self.model=model_ft
@@ -349,7 +349,7 @@ if __name__ == '__main__':
     # print(net)
     input2 = Variable(torch.FloatTensor(8, 3, 256, 256))
     output2,output2,output2 = net(input2,input2,input2)
-    # flops,params=profile(net,(input2,))
-    # print('flops: ', flops, 'params: ', params)
+    flops,params=profile(net,(input2,))
+    print('flops: ', flops, 'params: ', params)
     # print('net output size:')
     print(output2.shape)

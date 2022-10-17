@@ -26,11 +26,6 @@ from utils import update_average, get_model_list, load_network, save_network, ma
 
 version =  torch.__version__
 #fp16
-try:
-    from apex.fp16_utils import *
-    from apex import amp
-except ImportError: # will be 3.x series
-    print('This is not an error. If you want to use low precision, i.e., fp16, please install the apex with cuda support (https://github.com/NVIDIA/apex) and update pytorch to 1.0')
 ######################################################################
 # Options
 # --------

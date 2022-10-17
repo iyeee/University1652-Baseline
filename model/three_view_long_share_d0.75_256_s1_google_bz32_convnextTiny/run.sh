@@ -1,6 +1,6 @@
 # Baseline
 python train.py \
---name='three_view_long_share_d0.75_256_s1_google_bz16_convnextTiny_colorj' \
+--name='three_view_long_share_d0.75_256_s1_google_bz32_convnextTiny' \
 --data_dir='/data/modanqi/projects/University1652-Baseline/data/train' \
 --extra \
 --views=3 \
@@ -9,10 +9,9 @@ python train.py \
 --stride=1 \
 --h=256 \
 --w=256 \
---gpu_ids='1' \
---batchsize=16 \
+--gpu_ids='0' \
+--batchsize=32 \
 --lr=0.01 \
---color_jitter
 
 # python train_no_street.py \
 # --name='two_view_long_no_street_share_d0.75_256_s1' \

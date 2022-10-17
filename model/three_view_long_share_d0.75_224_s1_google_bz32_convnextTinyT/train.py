@@ -491,7 +491,6 @@ optimizer_ft = optim.SGD([
 
 # Decay LR by a factor of 0.1 every 40 epochs
 exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=80, gamma=0.1)
-# cosine_schedule = optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer_ft,T_max=20,eta_min=1e-9)
 ######################################################################
 # Train and evaluate
 # ^^^^^^^^^^^^^^^^^^
