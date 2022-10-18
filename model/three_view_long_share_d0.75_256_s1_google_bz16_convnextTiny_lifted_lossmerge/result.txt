@@ -1,0 +1,8 @@
+torch.Size([37855, 512])
+torch.Size([951, 512])
+10
+Recall@1:74.88 Recall@5:89.87 Recall@10:92.88 Recall@top1:93.22 AP:78.23
+torch.Size([701, 512])
+torch.Size([51355, 512])
+514
+Recall@1:84.74 Recall@5:88.87 Recall@10:91.16 Recall@top1:98.86 AP:73.36

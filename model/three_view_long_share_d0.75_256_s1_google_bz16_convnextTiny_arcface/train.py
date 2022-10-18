@@ -105,7 +105,7 @@ transform_train_list = [
     transforms.Pad(opt.pad, padding_mode='edge'),
     transforms.RandomCrop((opt.h, opt.w)),
     transforms.RandomHorizontalFlip(),
-    Cutout(),
+    # Cutout(),
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ]
